@@ -1,11 +1,10 @@
 const { db } = require("../database/firebase");
-const { ref, set } = require("firebase-admin/database");
 
 async function createPolling(req, res) {
   try {
     const body = req.body;
 
-    await db.ref('polling/'+ body.ac_no).set({
+    await db.ref('polling/'+ body.supervisor_id).set({
       ac_no: body.ac_no,
       ps_no: body.ps_no,
       ac_name: body.ac_name,

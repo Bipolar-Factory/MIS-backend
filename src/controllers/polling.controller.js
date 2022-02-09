@@ -1,7 +1,7 @@
 const { db } = require("../database/firebase");
 
 
-// Create a Polling at /polling (POST)
+// Create a Polling at ./polling (POST)
 async function createPolling(req, res) {
   try {
     const body = req.body;
@@ -31,7 +31,7 @@ async function createPolling(req, res) {
   }
 }
 
-// Get Polling under a supervisor using /polling/:supervisor_id (GET)
+// Get Polling under a supervisor using ./polling/:supervisor_id (GET)
 async function getSupervisorPolling(req, res) {
   try {
     const supervisor_id = req.params.supervisor_id;
@@ -54,7 +54,7 @@ async function getSupervisorPolling(req, res) {
   }
 }
 
-// Get specific polling at /polling/:supervisor_id/:ac_no/:ps_no (GET)
+// Get specific polling at ./polling/:supervisor_id/:ac_no/:ps_no (GET)
 async function specificPolling(req, res) {
   try {
     const supervisor_id = req.params.supervisor_id;

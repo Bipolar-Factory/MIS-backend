@@ -1,6 +1,6 @@
 const { db } = require("../database/firebase");
 
-// Authenticate supervisior at /mapping (POST)
+// Authenticate supervisior at ./mapping (POST)
 async function authenticateId(req, res) {
   try {
     const { supervisor_id } = req.body;
@@ -26,7 +26,7 @@ async function authenticateId(req, res) {
   }
 }
 
-// Update data at /mapping (PUT)
+// Update data at ./mapping (PUT)
 async function updateMapping(req, res) {
   try {
     const { supervisor_id, ac_no, ps_no, camera_id } = req.body;
@@ -37,7 +37,7 @@ async function updateMapping(req, res) {
       .child(supervisor_id)
       .update({ ac_no: ac_no, ps_no: ps_no, camera_id: camera_id })
       .then(() => {
-        return res.send({status: "successful"})
+        return res.send({status: true})
       })
       .catch((error) => {
         return res.send(error)
@@ -48,7 +48,7 @@ async function updateMapping(req, res) {
   }
 }
 
-// Delete data at /mapping (DELETE)
+// Delete data at ./mapping (DELETE)
 async function deleteMapping(req, res) {
     try {
       const { supervisor_id, ac_no, ps_no } = req.body;
@@ -59,7 +59,7 @@ async function deleteMapping(req, res) {
         .child(supervisor_id)
         .remove()
         .then(() => {
-          return res.send({status: "successful"})
+          return res.send({status: true})
         })
         .catch((error) => {
           return res.send(error)

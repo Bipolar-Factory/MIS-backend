@@ -1,10 +1,12 @@
 const { db } = require("../database/firebase");
 
+
+// Create a Polling at /polling (POST)
 async function createPolling(req, res) {
   try {
     const body = req.body;
 
-    await db.ref('polling/'+ body.supervisor_id).set({
+    await db.ref('polling/'+ body.supervisor_id).push().set({
       ac_no: body.ac_no,
       ps_no: body.ps_no,
       ac_name: body.ac_name,
@@ -22,32 +24,55 @@ async function createPolling(req, res) {
 
     });
 
-    res.send("Polling Created")
+    res.status(200).send("Polling Created")
     
   } catch (err) {
     res.status(400).send(err.message);
   }
 }
 
-
-async function getAllPolling(req, res) {
+// Get Polling under a supervisor using /polling/:supervisor_id (GET)
+async function getSupervisorPolling(req, res) {
   try {
-    var result;
-    await db.ref().child("polling").get().then((snapshot) => {
-      if (snapshot.exists()) {
-        result = snapshot.val();
-      } else {
-        console.log("No data available");
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
+    const supervisor_id = req.params.supervisor_id;
+    var list = []
+    await db.ref().child("polling").child(supervisor_id).once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        list.push(childSnapshot.val());
+      });
+    })
 
-    res.send(result)
+    if(list.length != 0){
+      res.status(200).send(list);
+    }else{
+      res.status(404).end("Not found")
+    }
+    
     
   } catch (err) {
     res.status(400).send(err.message);
   }
 }
 
-module.exports = { createPolling, getAllPolling }
+// Get specific polling at /polling/:supervisor_id/:ac_no/:ps_no (GET)
+async function specificPolling(req, res) {
+  try {
+    const supervisor_id = req.params.supervisor_id;
+    const ac_no = req.params.ac_no;
+    const ps_no = req.params.ps_no;
+
+    await db.ref().child("polling").child(supervisor_id).once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        if(childSnapshot.val().ac_no == ac_no && childSnapshot.val().ps_no == ps_no){
+          return res.status(200).send(childSnapshot);
+        }
+      });
+    })
+    res.status(404).end("Not found")
+    
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+module.exports = { createPolling, getSupervisorPolling, specificPolling }

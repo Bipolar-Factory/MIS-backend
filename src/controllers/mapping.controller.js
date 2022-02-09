@@ -1,5 +1,6 @@
 const { db } = require("../database/firebase");
 
+// Authenticate supervisior at /mapping (POST)
 async function authenticateId(req, res) {
   try {
     const { supervisor_id } = req.body;
@@ -25,6 +26,7 @@ async function authenticateId(req, res) {
   }
 }
 
+// Update data at /mapping (PUT)
 async function updateMapping(req, res) {
   try {
     const { supervisor_id, ac_no, ps_no, camera_id } = req.body;
@@ -46,7 +48,7 @@ async function updateMapping(req, res) {
   }
 }
 
-
+// Delete data at /mapping (DELETE)
 async function deleteMapping(req, res) {
     try {
       const { supervisor_id, ac_no, ps_no } = req.body;

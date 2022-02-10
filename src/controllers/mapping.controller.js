@@ -52,18 +52,36 @@ async function updateMapping(req, res) {
 async function deleteMapping(req, res) {
     try {
       const { supervisor_id, ac_no, ps_no } = req.body;
+
+      var key;
+
+      await db
+      .ref()
+      .child("polling")
+      .child(supervisor_id)
+      .once("value", (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          if (
+            childSnapshot.val().ac_no == ac_no &&
+            childSnapshot.val().ps_no == ps_no
+          ) {
+            key = childSnapshot.key;
+          }
+        });
+      });
   
       await db
-        .ref()
-        .child("polling")
-        .child(supervisor_id)
-        .remove()
-        .then(() => {
-          return res.send({status: true})
-        })
-        .catch((error) => {
-          return res.send(error)
-        });
+      .ref()
+      .child("polling")
+      .child(supervisor_id)
+      .child(key)
+      .remove()
+      .then(() => {
+        res.status(200).send({ status: true });
+      })
+      .catch((error) => {
+        return res.send(error);
+      });
   
     } catch (err) {
       res.status(400).send(err.message);

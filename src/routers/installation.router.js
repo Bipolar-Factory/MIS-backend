@@ -2,7 +2,7 @@ const { authenticateInstallation, updateInstallation } = require("../controllers
 
 const InstallationRouter = require("express").Router();
 
-InstallationRouter.get("/:ac_no/:ps_no", authenticateInstallation);
+InstallationRouter.post("/", authenticateInstallation);
 InstallationRouter.put("/", updateInstallation);
 
 module.exports = InstallationRouter;

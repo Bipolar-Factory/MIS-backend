@@ -3,7 +3,7 @@ const { db } = require("../database/firebase");
 // Authenticate at ./installation/:ac_no/:ps_no (GET)
 async function authenticateInstallation(req, res) {
   try {
-    const { ac_no, ps_no } = req.params;
+    const { ac_no, ps_no } = req.body;
 
     await db
       .ref()

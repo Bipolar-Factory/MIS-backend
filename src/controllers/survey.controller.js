@@ -32,7 +32,6 @@ async function updateSurvey(req, res) {
       supervisor_id,
       ac_no,
       ps_no,
-      is_survey_completed,
       remarks,
       is_power_switch_board_available,
       is_power_connection_available,
@@ -60,7 +59,7 @@ async function updateSurvey(req, res) {
       .child(supervisor_id)
       .child(key)
       .update({
-        is_survey_completed: is_survey_completed,
+        is_survey_completed: true,
         remarks: remarks,
         is_power_switch_board_available: is_power_switch_board_available,
         is_power_connection_available: is_power_connection_available,
@@ -103,7 +102,7 @@ async function deleteSurvey(req, res) {
       .child(supervisor_id)
       .child(key)
       .update({
-        is_survey_completed: null,
+        is_survey_completed: false,
         remarks: null,
         is_power_switch_board_available: null,
         is_power_connection_available: null,

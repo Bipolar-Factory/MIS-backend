@@ -8,21 +8,15 @@ async function createPolling(req, res) {
 
     await db.ref('polling/'+ body.supervisor_id).push().set({
       supervisor_id: body.supervisor_id,
+      supervisor_name: body.supervisor_name,
       ac_no: body.ac_no,
       ps_no: body.ps_no,
       ac_name: body.ac_name,
       address: body.address,
       district: body.district,
       state: body.state,
-      is_mapped: body.is_mapped,
-      is_camera_installed: body.is_camera_installed,
-      camera_id: body.camera_id,
-     	is_camera_online: body.is_camera_online,
-      is_survey_completed: body.is_survey_completed,
-      is_power_connection_available: body.is_power_connection_available,
-      is_power_switch_board_available: body.is_power_switch_board_available,
-      remarks: body.remarks,
-
+      is_mapped: false,
+      is_survey_completed: false,
     });
 
     res.status(200).send("Polling Created")

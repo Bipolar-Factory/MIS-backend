@@ -7,6 +7,7 @@ async function createPolling(req, res) {
     const body = req.body;
 
     await db.ref('polling/'+ body.supervisor_id).push().set({
+      supervisor_id: body.supervisor_id,
       ac_no: body.ac_no,
       ps_no: body.ps_no,
       ac_name: body.ac_name,

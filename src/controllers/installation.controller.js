@@ -4,7 +4,7 @@ const { db } = require("../database/firebase");
 async function authenticateInstallation(req, res) {
   try {
     const { ac_no, ps_no } = req.body;
-
+    var supervisor_id, key;
     await db
       .ref()
       .child("polling")
@@ -15,13 +15,19 @@ async function authenticateInstallation(req, res) {
               grandChildSnapshot.val().ac_no == ac_no &&
               grandChildSnapshot.val().ps_no == ps_no
             ) {
-              return res.status(200).send({ status: true });
+              supervisor_id = childSnapshot.key;
+              key = grandChildSnapshot.key;
             }
           });
         });
       });
 
-    res.status(404).end("Failed");
+      db.ref().child("polling").child(supervisor_id).child(key).get().then((snapshot) => {
+        if (snapshot.exists()) {
+          res.status(200).send({status: "accepted", body: snapshot.val()});
+        }})
+
+    
   } catch (err) {
     res.status(400).send(err.message);
   }

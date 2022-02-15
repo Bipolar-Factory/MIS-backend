@@ -50,7 +50,6 @@ async function updateInstallation(req, res) {
         });
       });
 
-    console.log(supervisor_id, key);
 
     await db
       .ref()
@@ -60,6 +59,7 @@ async function updateInstallation(req, res) {
       .update({
         is_camera_installed: is_camera_installed,
         is_camera_online: is_camera_online,
+        imageUrl: `http://localhost:5000/api/uploads/${req.file.filename}`,
       })
       .then(() => {
         res.status(200).send({ status: true });

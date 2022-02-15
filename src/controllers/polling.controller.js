@@ -1,6 +1,5 @@
 const { db } = require("../database/firebase");
 const multer = require("multer");
-const upload = multer({dest: "uploads/"});
 
 // Create a Polling at ./polling (POST)
 async function createPolling(req, res) {

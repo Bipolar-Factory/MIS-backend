@@ -103,9 +103,9 @@ async function deleteSurvey(req, res) {
       .child(key)
       .update({
         is_survey_completed: false,
-        remarks: null,
-        is_power_switch_board_available: null,
-        is_power_connection_available: null,
+        remarks: "null",
+        is_power_switch_board_available: false,
+        is_power_connection_available: false,
       })
       .then(() => {
         res.status(200).send({ status: true });

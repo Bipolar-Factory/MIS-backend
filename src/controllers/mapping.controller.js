@@ -94,7 +94,7 @@ async function deleteMapping(req, res) {
       .child(supervisor_id)
       .child(key)
       .update({
-        camera_id: null,
+        camera_id: "null",
         is_mapped: false,
       })
       .then(() => {

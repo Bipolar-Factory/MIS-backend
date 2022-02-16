@@ -17,6 +17,13 @@ async function createPolling(req, res) {
       state: body.state,
       is_mapped: false,
       is_survey_completed: false,
+      remarks: "null",
+      is_power_switch_board_available: false,
+      is_power_connection_available: false,
+      camera_id: "null",
+      is_camera_installed: false,
+      is_camera_online: false,
+      imageUrl: "null",
     });
 
     res.status(200).send("Polling Created")

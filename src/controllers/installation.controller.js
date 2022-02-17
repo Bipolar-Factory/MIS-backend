@@ -22,14 +22,18 @@ async function authenticateInstallation(req, res) {
         });
       });
 
+      if (!key){
+        return res.status(400).send({status: false})
+      }
+
       db.ref().child("polling").child(supervisor_id).child(key).get().then((snapshot) => {
         if (snapshot.exists()) {
-          res.status(200).send({status: "accepted", body: snapshot.val()});
+          res.status(200).send({status: true, body: snapshot.val()});
         }})
 
     
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false})
   }
 }
 
@@ -56,6 +60,9 @@ async function updateInstallation(req, res) {
         });
       });
 
+      if (!key){
+        return res.status(400).send({status: false})
+      }
 
     await db
       .ref()
@@ -75,31 +82,9 @@ async function updateInstallation(req, res) {
       });
 
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false})
   }
 }
 
 
-// Update Installation data at ./installation/ (PUT)
-async function postTest(req, res) {
-  try {
-
-    await db
-      .ref()
-      .child("test")
-      .update({
-        imageUrl: `${process.env.url}uploads/${req.file.filename}`,
-      })
-      .then(() => {
-        res.status(200).send({ status: true });
-      })
-      .catch((error) => {
-        return res.send(error);
-      });
-
-  } catch (err) {
-    res.status(400).send(err.message);
-  }
-}
-
-module.exports = { authenticateInstallation, updateInstallation, postTest };
+module.exports = { authenticateInstallation, updateInstallation };

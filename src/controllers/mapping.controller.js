@@ -18,11 +18,11 @@ async function authenticateId(req, res) {
         }
       })
       .catch((error) => {
-        return res.send(error);
+        return res.send({status: false});
       });
 
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false});
   }
 }
 
@@ -48,6 +48,10 @@ async function updateMapping(req, res) {
       });
     });
 
+    if (!key){
+      return res.status(400).send({status: false})
+    }
+
     await db
       .ref()
       .child("polling")
@@ -58,11 +62,11 @@ async function updateMapping(req, res) {
         return res.send({status: true})
       })
       .catch((error) => {
-        return res.send(error)
+        return res.send({status: false})
       });
 
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false});
   }
 }
 
@@ -87,6 +91,10 @@ async function deleteMapping(req, res) {
           }
         });
       });
+
+      if (!key){
+        return res.status(400).send({status: false})
+      }
   
       await db
       .ref()
@@ -101,11 +109,11 @@ async function deleteMapping(req, res) {
         res.status(200).send({ status: true });
       })
       .catch((error) => {
-        return res.send(error);
+        return res.send({status: false});
       });
   
     } catch (err) {
-      res.status(400).send(err.message);
+      res.status(400).send({status: false});
     }
   }
 

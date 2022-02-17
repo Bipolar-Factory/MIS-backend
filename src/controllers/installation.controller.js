@@ -79,4 +79,27 @@ async function updateInstallation(req, res) {
   }
 }
 
-module.exports = { authenticateInstallation, updateInstallation };
+
+// Update Installation data at ./installation/ (PUT)
+async function postTest(req, res) {
+  try {
+
+    await db
+      .ref()
+      .child("test")
+      .update({
+        imageUrl: `${process.env.url}uploads/${req.file.filename}`,
+      })
+      .then(() => {
+        res.status(200).send({ status: true });
+      })
+      .catch((error) => {
+        return res.send(error);
+      });
+
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+module.exports = { authenticateInstallation, updateInstallation, postTest };

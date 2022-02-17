@@ -25,11 +25,11 @@ async function createPolling(req, res) {
       is_camera_online: false,
       imageUrl: "null",
     });
-
-    res.status(200).send("Polling Created")
+    
+    res.status(200).send({status: true})
     
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false});
   }
 }
 
@@ -47,12 +47,12 @@ async function getSupervisorPolling(req, res) {
     if(list.length != 0){
       res.status(200).send(list);
     }else{
-      res.status(404).end("Not found")
+      res.status(404).end({status: false})
     }
     
     
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false})
   }
 }
 
@@ -70,10 +70,10 @@ async function specificPolling(req, res) {
         }
       });
     })
-    res.status(404).end("Not found")
+    res.status(404).end({status: false})
     
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false});
   }
 }
 

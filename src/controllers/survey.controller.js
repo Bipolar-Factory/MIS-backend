@@ -53,6 +53,10 @@ async function updateSurvey(req, res) {
         });
       });
 
+      if (!key){
+        return res.status(400).send({status: false})
+      }
+
     await db
       .ref()
       .child("polling")
@@ -71,7 +75,7 @@ async function updateSurvey(req, res) {
         return res.send(error);
       });
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false})
   }
 }
 
@@ -96,6 +100,10 @@ async function deleteSurvey(req, res) {
         });
       });
 
+      if (!key){
+        return res.status(400).send({status: false})
+      }
+
     await db
       .ref()
       .child("polling")
@@ -114,7 +122,7 @@ async function deleteSurvey(req, res) {
         return res.send(error);
       });
   } catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({status: false})
   }
 }
 

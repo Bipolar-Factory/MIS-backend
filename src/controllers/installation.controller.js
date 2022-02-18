@@ -1,24 +1,50 @@
 const { db } = require("../database/firebase");
 
+async function createInstallation(req, res) {
+  try {
+    const body = req.body;
+
+    await db.ref('installation').push().set({
+
+      phase: body.phase, 
+      state: body.state, 
+      district: body.district, 
+      assembly: body.assembly, 
+      ac_no: body.ac_no, 
+      ps_no: body.ps_no, 
+      ps_address: body.ps_address, 
+      is_camera_installed: false, 
+      is_camera_online: false, 
+      imageUrl: "null",
+      if_pending_remarks: body.if_pending_remarks, 
+      if_offline_remarks: body.if_offline_remarks 
+
+    });
+    
+    res.status(200).send({status: true})
+    
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+
 // Authenticate at ./installation/:ac_no/:ps_no (GET)
 async function authenticateInstallation(req, res) {
   try {
     const { ac_no, ps_no } = req.body;
-    var supervisor_id, key;
+    var key;
     await db
       .ref()
-      .child("polling")
+      .child("installation")
       .once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
-          childSnapshot.forEach((grandChildSnapshot) => {
             if (
-              grandChildSnapshot.val().ac_no == ac_no &&
-              grandChildSnapshot.val().ps_no == ps_no
+              childSnapshot.val().ac_no == ac_no &&
+              childSnapshot.val().ps_no == ps_no
             ) {
-              supervisor_id = childSnapshot.key;
-              key = grandChildSnapshot.key;
+              key = childSnapshot.key;
             }
-          });
         });
       });
 
@@ -26,7 +52,7 @@ async function authenticateInstallation(req, res) {
         return res.status(400).send({status: false})
       }
 
-      db.ref().child("polling").child(supervisor_id).child(key).get().then((snapshot) => {
+      db.ref().child("installation").child(key).get().then((snapshot) => {
         if (snapshot.exists()) {
           res.status(200).send({status: true, body: snapshot.val()});
         }})
@@ -40,23 +66,19 @@ async function authenticateInstallation(req, res) {
 // Update Installation data at ./installation/ (PUT)
 async function updateInstallation(req, res) {
   try {
-    const { ac_no, ps_no, is_camera_installed, is_camera_online } = req.body;
-    var supervisor_id, key;
-
+    const { ac_no, ps_no, is_camera_installed, is_camera_online, imageUrl } = req.body;
+    var key;
     await db
       .ref()
-      .child("polling")
+      .child("installation")
       .once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
-          childSnapshot.forEach((grandChildSnapshot) => {
             if (
-              grandChildSnapshot.val().ac_no == ac_no &&
-              grandChildSnapshot.val().ps_no == ps_no
+              childSnapshot.val().ac_no == ac_no &&
+              childSnapshot.val().ps_no == ps_no
             ) {
-              supervisor_id = childSnapshot.key;
-              key = grandChildSnapshot.key;
+              key = childSnapshot.key;
             }
-          });
         });
       });
 
@@ -66,13 +88,13 @@ async function updateInstallation(req, res) {
 
     await db
       .ref()
-      .child("polling")
-      .child(supervisor_id)
+      .child("installation")
       .child(key)
       .update({
-        is_camera_installed: is_camera_installed,
-        is_camera_online: is_camera_online,
-        imageUrl: `${process.env.url}uploads/${req.file.filename}`,
+        is_camera_installed: is_camera_installed, 
+        is_camera_online: is_camera_online, 
+        imageUrl: imageUrl,
+        // imageUrl: `${process.env.url}uploads/${req.file.filename}`,
       })
       .then(() => {
         res.status(200).send({ status: true });
@@ -87,4 +109,4 @@ async function updateInstallation(req, res) {
 }
 
 
-module.exports = { authenticateInstallation, updateInstallation };
+module.exports = { createInstallation, authenticateInstallation, updateInstallation };

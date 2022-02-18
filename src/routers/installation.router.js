@@ -1,4 +1,4 @@
-const { authenticateInstallation, updateInstallation } = require("../controllers/installation.controller");
+const { createInstallation, authenticateInstallation, updateInstallation } = require("../controllers/installation.controller");
 
 const multer = require("multer");
 
@@ -27,6 +27,7 @@ const upload = multer({
 
 const InstallationRouter = require("express").Router();
 
+InstallationRouter.post("/create", createInstallation);
 InstallationRouter.post("/", authenticateInstallation);
 InstallationRouter.put("/", upload.single("cameraImage"), updateInstallation);
 

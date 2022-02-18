@@ -1,5 +1,39 @@
 const { db } = require("../database/firebase");
 
+async function createSurvey(req, res) {
+  try {
+    const body = req.body;
+
+    await db.ref('survey/'+ body.supervisor_id).push().set({
+
+      phase: body.phase, 
+      state: body.state, 
+      district: body.district, 
+      assembly: body.assembly, 
+      ac_no: body.ac_no, 
+      ps_no: body.ps_no, 
+      ps_address: body.ps_address, 
+      supervisor_id: body.supervisor_id, 
+      operator: "null", 
+      rssi: "null", 
+      upload_speed: "null", 
+      download_speed: "null",
+      is_survey_completed: false, 
+      power_connection_avalaible: false, 
+      power_socket_avaliable: false, 
+      booth_safety: "null", 
+      remarks: "null"
+
+    });
+    
+    res.status(200).send({status: true})
+    
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
+
 // Authenticate supervisior at ./mapping (POST)
 async function authenticateId(req, res) {
   try {
@@ -7,7 +41,7 @@ async function authenticateId(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("survey")
       .child(supervisor_id)
       .get()
       .then((snapshot) => {
@@ -32,15 +66,20 @@ async function updateSurvey(req, res) {
       supervisor_id,
       ac_no,
       ps_no,
+      power_connection_avalaible, 
+      power_socket_avaliable, 
+      booth_safety, 
       remarks,
-      is_power_switch_board_available,
-      is_power_connection_available,
+      operator, 
+      rssi, 
+      upload_speed, 
+      download_speed,
     } = req.body;
     var key;
 
     await db
       .ref()
-      .child("polling")
+      .child("survey")
       .child(supervisor_id)
       .once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -59,14 +98,19 @@ async function updateSurvey(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("survey")
       .child(supervisor_id)
       .child(key)
       .update({
         is_survey_completed: true,
+        power_connection_avalaible: power_connection_avalaible, 
+        power_socket_avaliable: power_socket_avaliable, 
+        booth_safety: booth_safety, 
         remarks: remarks,
-        is_power_switch_board_available: is_power_switch_board_available,
-        is_power_connection_available: is_power_connection_available,
+        operator: operator, 
+        rssi: rssi, 
+        upload_speed: upload_speed, 
+        download_speed: download_speed,
       })
       .then(() => {
         res.status(200).send({ status: true });
@@ -87,7 +131,7 @@ async function deleteSurvey(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("survey")
       .child(supervisor_id)
       .once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -106,14 +150,19 @@ async function deleteSurvey(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("survey")
       .child(supervisor_id)
       .child(key)
       .update({
         is_survey_completed: false,
+        power_connection_avalaible: false, 
+        power_socket_avaliable: false, 
+        booth_safety: "null", 
         remarks: "null",
-        is_power_switch_board_available: false,
-        is_power_connection_available: false,
+        operator: "null", 
+        rssi: "null", 
+        upload_speed: "null", 
+        download_speed: "null",
       })
       .then(() => {
         res.status(200).send({ status: true });
@@ -126,4 +175,4 @@ async function deleteSurvey(req, res) {
   }
 }
 
-module.exports = { authenticateId, deleteSurvey, updateSurvey };
+module.exports = { authenticateId, deleteSurvey, updateSurvey, createSurvey };

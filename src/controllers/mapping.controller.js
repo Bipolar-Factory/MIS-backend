@@ -1,5 +1,33 @@
 const { db } = require("../database/firebase");
 
+async function createMapping(req, res) {
+  try {
+    const body = req.body;
+
+    await db.ref('mapping/'+ body.supervisor_id).push().set({
+
+      phase: body.phase, 
+      state: body.state, 
+      district: body.district, 
+      assembly: body.assembly, 
+      ac_no: body.ac_no, 
+      ps_no: body.ps_no, 
+      ps_address: body.ps_address, 
+      supervisor_id: body.supervisor_id,
+      is_mapped: false, 
+      stream_id: "null", 
+      kit_status: "null", 
+      remarks: "null"
+
+    });
+    
+    res.status(200).send({status: true})
+    
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
+
 // Authenticate supervisior at ./mapping (POST)
 async function authenticateId(req, res) {
   try {
@@ -7,7 +35,7 @@ async function authenticateId(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("mapping")
       .child(supervisor_id)
       .get()
       .then((snapshot) => {
@@ -29,13 +57,13 @@ async function authenticateId(req, res) {
 // Update data at ./mapping (PUT)
 async function updateMapping(req, res) {
   try {
-    const { supervisor_id, ac_no, ps_no, camera_id } = req.body;
+    const { supervisor_id, ac_no, ps_no, stream_id, kit_status, remarks } = req.body;
 
     var key;
 
     await db
     .ref()
-    .child("polling")
+    .child("mapping")
     .child(supervisor_id)
     .once("value", (snapshot) => {
       snapshot.forEach((childSnapshot) => {
@@ -54,10 +82,10 @@ async function updateMapping(req, res) {
 
     await db
       .ref()
-      .child("polling")
+      .child("mapping")
       .child(supervisor_id)
       .child(key)
-      .update({ camera_id: camera_id, is_mapped: true })
+      .update({ stream_id: stream_id, kit_status: kit_status, remarks: remarks, is_mapped: true })
       .then(() => {
         return res.send({status: true})
       })
@@ -79,7 +107,7 @@ async function deleteMapping(req, res) {
 
       await db
       .ref()
-      .child("polling")
+      .child("mapping")
       .child(supervisor_id)
       .once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -98,11 +126,13 @@ async function deleteMapping(req, res) {
   
       await db
       .ref()
-      .child("polling")
+      .child("mapping")
       .child(supervisor_id)
       .child(key)
       .update({
-        camera_id: "null",
+        stream_id: "null",
+        kit_status: "null",
+        remarks: "null",
         is_mapped: false,
       })
       .then(() => {
@@ -117,4 +147,4 @@ async function deleteMapping(req, res) {
     }
   }
 
-module.exports = { authenticateId, updateMapping, deleteMapping };
+module.exports = { authenticateId, updateMapping, deleteMapping, createMapping };

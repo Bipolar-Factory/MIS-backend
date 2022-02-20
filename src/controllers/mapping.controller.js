@@ -28,6 +28,29 @@ async function createMapping(req, res) {
   }
 }
 
+// Get Polling under a supervisor using ./mapping/:supervisor_id (GET)
+async function getSupervisorMapping(req, res) {
+  try {
+    const supervisor_id = req.params.supervisor_id;
+    var list = []
+    await db.ref().child("mapping").child(supervisor_id).once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        list.push(childSnapshot.val());
+      });
+    })
+
+    if(list.length != 0){
+      res.status(200).send(list);
+    }else{
+      res.status(404).end({status: false})
+    }
+    
+    
+  } catch (err) {
+    res.status(400).send({status: false})
+  }
+}
+
 // Authenticate supervisior at ./mapping (POST)
 async function authenticateId(req, res) {
   try {
@@ -147,4 +170,4 @@ async function deleteMapping(req, res) {
     }
   }
 
-module.exports = { authenticateId, updateMapping, deleteMapping, createMapping };
+module.exports = { authenticateId, updateMapping, deleteMapping, createMapping, getSupervisorMapping };

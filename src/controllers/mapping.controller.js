@@ -14,6 +14,7 @@ async function createMapping(req, res) {
       ps_no: body.ps_no, 
       ps_address: body.ps_address, 
       supervisor_id: body.supervisor_id,
+      supervisor_name: body.supervisor_name,
       is_mapped: false, 
       stream_id: "null", 
       kit_status: "null", 

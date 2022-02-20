@@ -33,6 +33,30 @@ async function createSurvey(req, res) {
   }
 }
 
+// Get Polling under a supervisor using ./survey/:supervisor_id (GET)
+async function getSupervisorSurvey(req, res) {
+  try {
+    const supervisor_id = req.params.supervisor_id;
+    var list = []
+    await db.ref().child("survey").child(supervisor_id).once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        list.push(childSnapshot.val());
+      });
+    })
+
+    if(list.length != 0){
+      res.status(200).send(list);
+    }else{
+      res.status(404).end({status: false})
+    }
+    
+    
+  } catch (err) {
+    res.status(400).send({status: false})
+  }
+}
+
+
 
 // Authenticate supervisior at ./mapping (POST)
 async function authenticateId(req, res) {
@@ -175,4 +199,4 @@ async function deleteSurvey(req, res) {
   }
 }
 
-module.exports = { authenticateId, deleteSurvey, updateSurvey, createSurvey };
+module.exports = { authenticateId, deleteSurvey, updateSurvey, createSurvey, getSupervisorSurvey };

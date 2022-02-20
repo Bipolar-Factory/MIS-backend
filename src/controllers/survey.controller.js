@@ -13,14 +13,15 @@ async function createSurvey(req, res) {
       ac_no: body.ac_no, 
       ps_no: body.ps_no, 
       ps_address: body.ps_address, 
-      supervisor_id: body.supervisor_id, 
+      supervisor_id: body.supervisor_id,
+      supervisor_name: body.supervisor_name,
       operator: "null", 
       rssi: "null", 
       upload_speed: "null", 
       download_speed: "null",
       is_survey_completed: false, 
-      power_connection_avalaible: false, 
-      power_socket_avaliable: false, 
+      power_connection_available: false, 
+      power_socket_available: false, 
       booth_safety: "null", 
       remarks: "null"
 
@@ -90,8 +91,8 @@ async function updateSurvey(req, res) {
       supervisor_id,
       ac_no,
       ps_no,
-      power_connection_avalaible, 
-      power_socket_avaliable, 
+      power_connection_available, 
+      power_socket_available, 
       booth_safety, 
       remarks,
       operator, 
@@ -127,8 +128,8 @@ async function updateSurvey(req, res) {
       .child(key)
       .update({
         is_survey_completed: true,
-        power_connection_avalaible: power_connection_avalaible, 
-        power_socket_avaliable: power_socket_avaliable, 
+        power_connection_available: power_connection_available, 
+        power_socket_available: power_socket_available, 
         booth_safety: booth_safety, 
         remarks: remarks,
         operator: operator, 
@@ -179,8 +180,8 @@ async function deleteSurvey(req, res) {
       .child(key)
       .update({
         is_survey_completed: false,
-        power_connection_avalaible: false, 
-        power_socket_avaliable: false, 
+        power_connection_available: false, 
+        power_socket_available: false, 
         booth_safety: "null", 
         remarks: "null",
         operator: "null", 

@@ -17,8 +17,8 @@ async function createInstallation(req, res) {
       is_camera_installed: false,
       is_camera_online: false,
       imageUrl: "null",
-      if_pending_remarks: body.if_pending_remarks,
-      if_offline_remarks: body.if_offline_remarks,
+      if_pending_remarks: "null",
+      if_offline_remarks: "null",
     });
 
     res.status(200).send({ status: true });
@@ -104,7 +104,7 @@ async function authenticateInstallation(req, res) {
 // Update Installation data at ./installation/ (PUT)
 async function updateInstallation(req, res) {
   try {
-    const { ac_no, ps_no, is_camera_installed, is_camera_online, imageUrl } =
+    const { ac_no, ps_no, is_camera_installed, is_camera_online, imageUrl, if_pending_remarks, if_offline_remarks } =
       req.body;
     var key;
     await db
@@ -133,6 +133,8 @@ async function updateInstallation(req, res) {
         is_camera_installed: is_camera_installed,
         is_camera_online: is_camera_online,
         imageUrl: imageUrl,
+        if_pending_remarks: if_pending_remarks,
+        if_offline_remarks: if_offline_remarks,
         // imageUrl: `${process.env.url}uploads/${req.file.filename}`,
       })
       .then(() => {

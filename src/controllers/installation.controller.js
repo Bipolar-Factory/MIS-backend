@@ -12,6 +12,8 @@ async function createInstallation(req, res) {
       ac_no: body.ac_no,
       ps_no: body.ps_no,
       ps_address: body.ps_address,
+      supervisor_id: body.supervisor_id,
+      supervisor_name: body.supervisor_name,
       is_camera_installed: false,
       is_camera_online: false,
       imageUrl: "null",
